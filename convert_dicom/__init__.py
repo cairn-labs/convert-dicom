@@ -105,6 +105,10 @@ class DicomFile(object):
         return [float(x) for x in str(self.dicom_dataset.GetDataElement(
             gdcm.Tag(0x00020, 0x0032)).GetValue()).split("\\")]
 
+    def get_accession_number(self):
+        return str(self.dicom_dataset.GetDataElement(
+            gdcm.Tag(0x0008, 0x0050)).GetValue())
+
     def get_pixel_spacing(self):
         return [float(x) for x in str(self.dicom_dataset.GetDataElement(
             gdcm.Tag(0x00028, 0x0030)).GetValue()).split("\\")]
