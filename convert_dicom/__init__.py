@@ -269,21 +269,21 @@ MINIMUM_SERIES_SIZE = 10
 def get_arrays_for_dicom_dir(start_dir):
     arrays = []
     results = get_files_grouped_by_series(start_dir)
-    for series_dir in results:
-        if (len(results[series_dir]) >= MINIMUM_SERIES_SIZE):
-            ret_array = get_array_for_series_group(results[series_dir])
-            arrays.append(ret_array)
+    for series_uid in results:
+        if (len(results[series_uid]) >= MINIMUM_SERIES_SIZE):
+            ret_array = get_array_for_series_group(results[series_uid])
+            arrays.append((series_uid, ret_array))
         else:
-            print('skipping series_dir', series_dir)
+            print('skipping {} because series size is below minimum'.format(series_uid))
     return arrays
 
 def resample_voxel_arrays(voxel_arrays, desired_shape):
     resampled = []
-    for vox_array in voxel_arrays:
+    for uid, vox_array in voxel_arrays:
         zoom_factor = tuple(map(operator.truediv, desired_shape, vox_array.shape))
         # we might not want to use bilinear interpolation, not certain
         new_array = ndimage.interpolation.zoom(vox_array, zoom_factor)
-        resampled.append(new_array)
+        resampled.append((uid, new_array))
     return resampled
 
 
