@@ -257,11 +257,13 @@ def get_array_for_series_group(series_group):
     ret_array = None
     for index, dicom_file in enumerate(sorted_series):
         pix_array = dicom_file.get_numpy_pixel_array()
+        shape = None
         if index == 0:
             shape = pix_array.shape
             new_shape = len(sorted_series), shape[0], shape[1]
             ret_array = numpy.zeros(new_shape, dtype=pix_array.dtype)
-        ret_array[index] = pix_array
+        if pix_array.shape == shape:
+            ret_array[index] = pix_array
     return ret_array
 
 MINIMUM_SERIES_SIZE = 10
